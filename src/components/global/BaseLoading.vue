@@ -1,5 +1,5 @@
 <template>
-  <div v-if="visible" class="base-spinner fa-4x">
+  <div v-if="visible" class="base-loading fa-4x">
     <i class="fas fa-search-dollar heartBeat"></i>
   </div>
 </template>
@@ -12,12 +12,13 @@ export default {
     }
   },
   created () {
-    this.$root.$on('Spinner::show', () => {
-      this.visible = true
-    })
-    this.$root.$on('Spinner::hide', () => {
-      this.visible = false
-    })
+    this.$root.$on('Loading::show', this.switchLoading)
+    this.$root.$on('Loading::hide', this.switchLoading)
+  },
+  methods: {
+    switchLoading () {
+      this.visible = !this.visible
+    }
   }
 }
 </script>
@@ -25,7 +26,7 @@ export default {
 <style lang="scss" scoped>
 @import '../../assets/scss/variables';
 
-.base-spinner {
+.base-loading {
   top: 0;
   bottom: 0;
   right: 0;
@@ -37,11 +38,11 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: $dark-medium;
+  background-color: $backgroundLoading;
 }
 
 .fa-search-dollar {
-  color: $featured-dark;
+  color: $iconLoading;
   animation-duration: 1s;
   animation-iteration-count: infinite;
 }

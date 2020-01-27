@@ -1,29 +1,35 @@
 <template>
   <div id="app">
-  <!-- <router-view/> -->
-    <base-spinner/>
-    <button @click="mostrarSpinner()">
-      Show Spinner
-    </button>
+
+  <base-loading/>
+  <router-view/>
+
   </div>
 </template>
 
 <script>
-import BaseSpinner from './components/global/BaseSpinner'
+import BaseLoading from './components/global/BaseLoading'
 
 export default {
   name: 'App',
   components: {
-    BaseSpinner
+    BaseLoading
   },
   methods: {
-    mostrarSpinner () {
-      this.$root.$emit('Spinner::show')
+    showLoading () {
+      this.$root.$emit('Loading::show')
     }
+  },
+  mounted () {
+    console.log(this.$firebase)
   }
 }
 </script>
 
 <style lang="scss">
-
+  @import './assets/scss/variables';
+  #app {
+    min-height: 100vh;
+    background-color: $background;
+  }
 </style>
