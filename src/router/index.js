@@ -22,4 +22,13 @@ const router = new VueRouter({
   routes
 })
 
+router.beforeEach((to, from, next) => {
+  console.log(window.uid, to.name)
+  if (!window.uid && to.name !== 'login') {
+    next({ name: 'login' })
+  } else {
+    next()
+  }
+})
+
 export default router

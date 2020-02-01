@@ -8,12 +8,12 @@
 export default {
   data () {
     return {
-      visible: false
+      visible: true
     }
   },
   created () {
-    this.$root.$on('Loading::show', this.switchLoading)
-    this.$root.$on('Loading::hide', this.switchLoading)
+    this.$root.$on('Loading::show', () => { this.visible = true })
+    this.$root.$on('Loading::hide', () => { this.visible = false })
   },
   methods: {
     switchLoading () {

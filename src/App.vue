@@ -21,7 +21,11 @@ export default {
     }
   },
   mounted () {
-    console.log(this.$firebase)
+    this.$firebase.auth().onAuthStateChanged(user => {
+      window.uid = user ? user.uid : null
+      this.$router.push({ name: window.uid ? 'home' : 'login' })
+      setTimeout(() => { this.$root.$emit('Loading::hide') }, 300)
+    })
   }
 }
 </script>
