@@ -7,11 +7,25 @@ const routes = [
   {
     path: '/home',
     name: 'home',
+    meta: {
+      title: 'Home'
+    },
     component: () => import('../views/Home.vue')
+  },
+  {
+    path: '/expenses-list',
+    name: 'expenses-list',
+    meta: {
+      title: 'Expenses List'
+    },
+    component: () => import('../views/ExpensesList.vue')
   },
   {
     path: '/login',
     name: 'login',
+    meta: {
+      title: 'Login'
+    },
     component: () => import('../views/Login.vue')
   }
 ]
@@ -23,6 +37,7 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  document.title = to.meta.title + ' - Outgoes'
   console.log(window.uid, to.name)
   if (!window.uid && to.name !== 'login') {
     next({ name: 'login' })

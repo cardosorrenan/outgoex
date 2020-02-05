@@ -1,10 +1,9 @@
 <template>
   <form @submit.prevent="Login()" class='form-login'>
     <div class="card">
-      <div class="card-header text-center">
-        <h6>Control everything!</h6>
-      </div>
+
       <div class="card-body">
+        <logo/>
         <div class="form-group">
           <input
             v-model="email"
@@ -21,10 +20,9 @@
             class="form-control"
             placeholder="Password">
         </div>
-        <i class="fas fa-file-invoice-dollar tada fa-3x" v-if='loadingLogin'></i>
+        <i class="fas fa-search-dollar heartBeat fa-2x" v-if='loadingLogin'></i>
         <button v-if="!loadingLogin" class="btn btn-primary btn-block">
             Log in
-            <i class="fas fa-directions"></i>
         </button>
       </div>
     </div>
@@ -32,8 +30,13 @@
 </template>
 
 <script>
+import Logo from '../components/global/Logo'
+
 export default {
   name: 'Login',
+  components: {
+    Logo
+  },
   data: () => {
     return {
       email: 'renanhc96@gmail.com',
@@ -68,13 +71,6 @@ export default {
 <style lang="scss">
   @import '../assets/scss/variables';
 
-  .card-header {
-    color: $dark-medium;
-    background-color: $light-medium;
-    padding-top: 5vh;
-    padding-bottom: 5vh;
-    margin-bottom: 0;
-  }
   .form-login {
     display: flex;
     height: 100vh;
@@ -82,7 +78,11 @@ export default {
     justify-content: center;
   }
   .card {
+    background-color: $backgroundLoading;
     width: 25%;
+  }
+  .form-control {
+    background-color: $ligther;
   }
   .card-body {
     display: flex;
@@ -91,22 +91,22 @@ export default {
     align-items: center;
   }
   .btn {
-    background-color: #053440;
+    color: $ligther;
+    background-color: rgba(05,34,40,0.8);
     border: 0;
-    margin-top: 5vh;
     transition: 0.8s;
     margin-bottom: 5vh;
   }
   .btn:hover {
-    background-color: rgba(05,34,40,0.8);
+    background-color: rgba(15,44,50,1);
   }
   .fa-directions {
     margin-left: 1vw;
   }
-  .fa-file-invoice-dollar{
-    margin-top: 5vh;
-    margin-bottom: 5vh;
-    color: $light-low;
+  .fa-search-dollar {
+    margin-top: 2.5vh;
+    margin-bottom: 2.5vh;
+    color: $iconLoading;
     animation-duration: 1s;
     animation-iteration-count: infinite;
   }
