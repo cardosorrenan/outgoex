@@ -1,7 +1,6 @@
 <template>
   <form @submit.prevent="Login()" class='form-login'>
     <div class="card">
-
       <div class="card-body">
         <logo/>
         <div class="form-group">

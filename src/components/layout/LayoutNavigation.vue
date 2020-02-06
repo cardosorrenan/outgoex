@@ -4,6 +4,8 @@
     <logo/>
 
     <router-link
+      exact
+      exact-active-class="active"
       :key='i'
       class="nav-link heartBeat"
       :to="{ name: router.name }"
@@ -13,16 +15,22 @@
       {{ router.meta.title }}
     </router-link>
 
+    <hr>
+
+    <layout-new-expense/>
+
   </ul>
 </template>
 
 <script>
 import Logo from '../global/Logo'
+import LayoutNewExpense from './LayoutNewExpense'
 
 export default {
   name: 'navigation',
   components: {
-    Logo
+    Logo,
+    LayoutNewExpense
   },
   computed: {
     routerLinks () {

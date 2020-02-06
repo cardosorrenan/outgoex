@@ -16,27 +16,25 @@
 
     <router-view v-else/>
 
+    <layout-logout v-if="isLogged" class="logout"/>
   </div>
 </template>
 
 <script>
 import BaseLoading from './components/global/BaseLoading'
 import LayoutNavigation from './components/layout/LayoutNavigation'
+import LayoutLogout from './components/layout/LayoutLogout'
 
 export default {
   name: 'App',
   components: {
     BaseLoading,
-    LayoutNavigation
+    LayoutNavigation,
+    LayoutLogout
   },
   data: () => ({
     isLogged: false
   }),
-  methods: {
-    showLoading () {
-      this.$root.$emit('Loading::show')
-    }
-  },
   mounted () {
     this.$firebase.auth().onAuthStateChanged(user => {
       window.uid = user ? user.uid : null
@@ -58,5 +56,14 @@ export default {
     padding-left: 0px !important;
     min-height: 100vh;
     background-color: $backgroundLoading;
+  }
+  .container-fluid {
+    z-index: 0;
+  }
+  .logout {
+    position: absolute;
+    z-index: 100;
+    top: 5vh;
+    right: 5vh;
   }
 </style>

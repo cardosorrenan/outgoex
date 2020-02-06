@@ -14,11 +14,6 @@ export default {
   created () {
     this.$root.$on('Loading::show', () => { this.visible = true })
     this.$root.$on('Loading::hide', () => { this.visible = false })
-  },
-  methods: {
-    switchLoading () {
-      this.visible = !this.visible
-    }
   }
 }
 </script>
