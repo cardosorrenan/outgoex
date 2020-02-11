@@ -50,7 +50,7 @@ export default {
   @import './assets/scss/variables';
   #app {
     min-height: 100vh;
-    background-color: $dark-medium;
+    background-color: $light;
   }
   .navigation-sidebar {
     padding-left: 0px !important;

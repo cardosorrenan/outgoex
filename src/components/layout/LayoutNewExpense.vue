@@ -5,10 +5,10 @@
     </button>
     <form @submit.prevent="submit()">
       <div
-      class="modal fade "
-      :class="{show: showModal}"
-      style="padding-right: 15px; display: block;"
-      :style="{display: showModal ? 'block' : 'none'}"
+        class="modal fade "
+        :class="{show: showModal}"
+        style="padding-right: 15px; display: block;"
+        :style="{display: showModal ? 'block' : 'none'}"
       >
       <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -27,6 +27,18 @@
                <div class="form-group col-4">
                 <label for="">Value: </label>
                 <input v-model="form.value" type="text" class="form-control" required>
+              </div>
+              <div class="form-group flex-column col-12 d-flex align-items-center">
+                <input ref="input" type="file" class="d-none" accept="image/*" @change="handleFile($event)" required>
+                <button type="button" @click="openFile()" class="btn w-50 btn-outline-secondary">
+                  Upload file
+                </button>
+                <div v-if="form.file">
+                  {{ form.file.name }}
+                  <button type="button" @click="form.file = null" class="btn badge badge-light">
+                    <i class="fa fa-trash text-danger"></i>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -50,36 +62,67 @@ export default {
     return {
       showModal: false,
       form: {
+        file: '',
         value: '',
         description: ''
       },
       sending: false
     }
   },
+  computed: {
+    fileName () {
+      const { file } = this.form
 
+      if (file) {
+        const split = file.name.split('.')
+        return `${split[0]}-${new Date().getTime()}.${split[1]}`
+      } else {
+        return ''
+      }
+    }
+  },
   methods: {
     modalVisibility () {
       this.showModal = !this.showModal
     },
-    submit () {
-      this.sending = true
-      const ref = this.$firebase.database().ref(window.uid)
-      const id = ref.push().key
-      const payload = {
-        id: id,
-        file: '',
-        value: this.form.value,
-        created: new Date().getTime(),
-        description: this.form.description
-      }
-      ref.child(id).set(payload, err => {
-        if (err) {
-          console.log(err)
-        } else {
-          console.log(payload)
+    openFile () {
+      this.$refs.input.value = null
+      this.$refs.input.click()
+    },
+    handleFile ({ target }) {
+      this.form.file = target.files[0]
+    },
+    async submit () {
+      let url = ''
+      try {
+        this.sending = true
+        const ref = this.$firebase.database().ref(window.uid)
+        const id = ref.push().key
+        if (this.form.file) {
+          const snapshot = await this.$firebase.storage()
+            .ref(window.uid)
+            .child(this.fileName)
+            .put(this.form.file)
+          url = await snapshot.ref.getDownloadURL()
         }
-      })
-      setTimeout(() => { this.sending = false }, 1500)
+        const payload = {
+          id: id,
+          urlFile: url,
+          ...this.form,
+          createdAt: new Date().getTime()
+        }
+        ref.child(id).set(payload, err => {
+          if (err) {
+            console.log(err)
+          } else {
+            console.log(payload)
+          }
+        })
+      } catch (err) {
+        console.log(err)
+      } finally {
+        setTimeout(() => { this.sending = false }, 1500)
+      }
     }
   }
 }

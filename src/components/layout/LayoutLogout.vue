@@ -32,6 +32,7 @@ export default {
   @import '../../assets/scss/variables';
 
   .btn-logout {
+    opacity: 1;
     width: 55px;
     height: 55px;
     display: flex;
@@ -40,8 +41,8 @@ export default {
     cursor: pointer;
     color: $light;
     transition: 0.4s;
-    background-color: rgba(05,34,40,0.8);
-    border: 5px solid rgba(05,34,40,0.8);
+    background-color: rgba(05,34,40,1);
+    border: 5px solid rgba(05,34,40,1);
     border-radius: 100px !important;
     &:hover {
       color: $dark;
