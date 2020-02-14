@@ -2,6 +2,7 @@
   <div id="app">
 
     <base-loading/>
+    <layout-notification/>
 
     <div class="container-fluid" v-if="isLogged">
       <div class="row">
@@ -22,6 +23,7 @@
 
 <script>
 import BaseLoading from './components/global/BaseLoading'
+import LayoutNotification from './components/layout/LayoutNotification'
 import LayoutNavigation from './components/layout/LayoutNavigation'
 import LayoutLogout from './components/layout/LayoutLogout'
 
@@ -29,6 +31,7 @@ export default {
   name: 'App',
   components: {
     BaseLoading,
+    LayoutNotification,
     LayoutNavigation,
     LayoutLogout
   },
@@ -50,7 +53,7 @@ export default {
   @import './assets/scss/variables';
   #app {
     min-height: 100vh;
-    background-color: $light;
+    background-color: #ddd;
   }
   .navigation-sidebar {
     padding-left: 0px !important;

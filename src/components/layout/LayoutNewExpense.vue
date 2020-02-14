@@ -113,15 +113,27 @@ export default {
         }
         ref.child(id).set(payload, err => {
           if (err) {
-            console.log(err)
+            console.log('1')
+            this.$root.$emit('Notification::show', {
+              type: 'danger',
+              message: 'Not possible to insert expense :('
+            })
           } else {
-            console.log(payload)
+            console.log('2')
+            this.$root.$emit('Notification::show', {
+              type: 'success',
+              message: 'Expense storaged!'
+            })
           }
         })
       } catch (err) {
-        console.log(err)
+        console.log('3')
+        this.$root.$emit('Notification::show', {
+          type: 'danger',
+          message: 'Not possible to insert expense :('
+        })
       } finally {
-        setTimeout(() => { this.sending = false }, 1500)
+        setTimeout(() => { this.sending = false }, 1000)
       }
     }
   }
@@ -131,6 +143,11 @@ export default {
 <style lang="scss" scoped>
 
   @import '../../assets/scss/variables';
+
+  .modal {
+    top: 10vh;
+    left: 10vh
+  }
 
   #close-modal {
     color: #fff;

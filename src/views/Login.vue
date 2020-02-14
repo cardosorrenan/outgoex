@@ -46,14 +46,33 @@ export default {
   methods: {
     async Login () {
       this.loadingLogin = true
+
       const { email, password } = this
+
       try {
         const response = await this.$firebase.auth().signInWithEmailAndPassword(email, password)
         window.uid = response.user.uid
         this.$router.push({ name: 'home' })
       } catch (err) {
-        console.log(err)
+        let message = ''
+
+        switch (err.code) {
+          case 'auth/user-not-found':
+            message = 'User not found'
+            break
+          case 'auth/wrong-password':
+            message = 'Invalid password'
+            break
+          default:
+            message = 'i dont know'
+        }
+
+        this.$root.$emit('Notification::show', {
+          type: 'danger',
+          message
+        })
       }
+
       this.loadingLogin = false
     }
   },
