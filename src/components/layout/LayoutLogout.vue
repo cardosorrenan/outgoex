@@ -39,10 +39,10 @@ export default {
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    color: $light;
+    color: rgba(05,34,40,1);
     transition: 0.4s;
-    background-color: rgba(05,34,40,1);
-    border: 5px solid rgba(05,34,40,1);
+    background-color: $light;
+    border: 5px solid $light;
     border-radius: 100px !important;
     &:hover {
       color: $dark;

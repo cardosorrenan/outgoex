@@ -38,7 +38,6 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   document.title = to.meta.title + ' - Outgoes'
-  console.log(window.uid, to.name)
   if (!window.uid && to.name !== 'login') {
     next({ name: 'login' })
   } else {

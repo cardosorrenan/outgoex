@@ -1,24 +1,26 @@
 <template>
-  <div class='home'>
-    <div class="row">
-      <div class="col-6 home-box">
-        <small>Your all expenses</small>
-        <div class="money">$ 900.00</div>
-        <small>in 98 purchases</small>
-      </div>
-      <div class="col-6 home-box">
-        <small>The montly average</small>
-        <div class="money">$ 1900.00</div>
-      </div>
-      <div class="col-6 home-box">
-        <small>The biggest expense was</small>
-        <div class="money">$ 90.00</div>
-        <small>in 20/02/2020</small>
-      </div>
-      <div class="col-6 home-box">
-        <small>The lowest expense was</small>
-        <div class="money">$ 0.10</div>
-        <small>in 19/02/2020</small>
+  <div class="body">
+    <div class='home'>
+      <div class="row">
+        <div class="home-box">
+          <small>Your all expenses: </small>
+          <div class="money" v-money-format="totals.totalSpent"/>
+          <small>in {{ this.expenses.length }} purchases</small>
+        </div>
+        <div class="home-box">
+          <small>The average: </small>
+          <div class="money" v-money-format="totals.average"/>
+        </div>
+        <div class="home-box">
+          <small>The biggest expense was: </small>
+          <div class="money" v-money-format="totals.biggest.value"/>
+          <small class="date" v-date-format="totals.biggest.createdAt"/>
+        </div>
+        <div class="home-box">
+          <small>The lowest expense was: </small>
+          <div class="money" v-money-format="totals.lowest.value"/>
+          <small class="date" v-date-format="totals.lowest.createdAt"/>
+        </div>
       </div>
     </div>
   </div>
@@ -33,13 +35,32 @@ export default {
   created () {
     this.getData()
   },
+  computed: {
+    totals () {
+      // eslint-disable-next-line no-unused-vars
+      const exp = this.expenses
+      const values = {
+        totalSpent: 0,
+        average: 0,
+        biggest: {},
+        lowest: {}
+      }
+      if (exp.length) {
+        values.totalSpent = exp.map(e => +e.value)
+          .reduce((acc, cur) => acc + cur, 0)
+        values.average = values.totalSpent / exp.length
+        values.biggest = exp.sort((a, b) => +b.value - +a.value)[0]
+        values.lowest = exp.sort((a, b) => +a.value - +b.value)[0]
+      }
+      return values
+    }
+  },
   methods: {
     getData () {
       const ref = this.$firebase.database().ref(`/${window.uid}`)
       ref.on('value', data => {
         const values = data.val()
         this.expenses = Object.keys(values).map(i => values[i])
-        console.log(this.expenses)
       })
     }
   }
@@ -51,30 +72,44 @@ export default {
   .h1 {
     color: $dark-medium;
   }
+  .body {
+    display: flex;
+    justify-content: center;
+  }
   .home {
     padding: 15px;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
     .home-box {
       width: 100%;
       display: flex;
       font-size: 20pt;
-      flex-direction: column;
-      height: calc(50vh - 15px);
+      flex-direction: row;
+      height: 150px;
       align-items: center;
-      justify-content: center;
-      border: 1px solid $dark-medium;
+      justify-content: flex-start;
+      border: 1px solid $light-medium;
+      padding-left: 5vw;
       small {
         font-size: 1.3rem;
       }
       .money {
         color: $dark;
         padding: 0 1vw 0 1vw;
+        margin: 0 1vw 0 1vw;
         background-color: rgba(0,0,0,0.2)
       }
-      &:nth-child(2), &:nth-child(4) {
-        border-left: none;
+      .date {
+        font-size: 0.8rem;
+        color: $dark-low;
       }
-      &:nth-child(3), &:nth-child(4) {
-        border-top: none;
+      &:nth-child(1), &:nth-child(2), &:nth-child(3) {
+        border-bottom: none;
+      }
+      &:hover {
+        transition: 0.5s;
+        background-color: $light-medium;
       }
     }
   }

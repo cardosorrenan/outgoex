@@ -4,6 +4,7 @@ import router from './router'
 import './assets/scss/app.scss'
 import Animate from 'animate.css'
 import Firebase from './firebase'
+import './utils/directives'
 
 Vue.use(Firebase)
 Vue.config.productionTip = false

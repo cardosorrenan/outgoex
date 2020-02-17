@@ -1,7 +1,7 @@
 <template>
   <div class="w-100 d-flex justify-content-center">
-    <button @click="modalVisibility()" class="btn btn btn-outline-prymary w-75">
-      Novo Gasto
+    <button @click="modalVisibility()" class="btn add-btn w-75">
+      New Expense
     </button>
     <form @submit.prevent="submit()">
       <div
@@ -22,28 +22,28 @@
             <div class="row">
               <div class="form-group col-8">
                 <label for="">Description: </label>
-                <input v-model="form.description" type="text" class="form-control" required>
+                <input required v-model="form.description" type="text" class="form-control">
               </div>
                <div class="form-group col-4">
                 <label for="">Value: </label>
-                <input v-model="form.value" type="text" class="form-control" required>
+                <input required v-model="form.value" type="text" class="form-control" @keypress="onlyNumber">
               </div>
               <div class="form-group flex-column col-12 d-flex align-items-center">
-                <input ref="input" type="file" class="d-none" accept="image/*" @change="handleFile($event)" required>
-                <button type="button" @click="openFile()" class="btn w-50 btn-outline-secondary">
+                <input ref="input" type="file" class="d-none" accept="image/*" @change="handleFile($event)">
+                <button type="button" @click="openFile()" class="upload-btn btn w-50 btn-outline-secondary">
                   Upload file
                 </button>
-                <div v-if="form.file">
-                  {{ form.file.name }}
-                  <button type="button" @click="form.file = null" class="btn badge badge-light">
-                    <i class="fa fa-trash text-danger"></i>
+                <div class='file-name' v-if="form.file">
+                  <div>{{ form.file.name }}</div>
+                  <button type="button" @click="form.file = null" class="trash-btn btn badge badge-light">
+                    <i class="fa fa-trash text-danger fa-2x"></i>
                   </button>
                 </div>
               </div>
             </div>
           </div>
-          <div @click="submit()" v-if='sending' id="submit-button" type="button" class="btn btn-primary"><i class="fas fa-spinner fa-pulse fa-2x"></i></div>
-          <button @click="submit()" v-if='!sending' id="submit-button" type="button" class="btn btn-primary"><i class="fas fa-plus-circle fa-2x"></i></button>
+          <div v-if='sending' id="submit-button" class="spinner" ><i class="fas fa-spinner fa-pulse fa-2x"></i></div>
+          <button v-else id="submit-button" type="submit"><i class="fas fa-plus-circle fa-2x"></i></button>
         </div>
       </div>
     </div>
@@ -82,6 +82,13 @@ export default {
     }
   },
   methods: {
+    onlyNumber ($event) {
+      // console.log($event.keyCode); //keyCodes value
+      let keyCode = ($event.keyCode ? $event.keyCode : $event.which)
+      if ((keyCode < 48 || keyCode > 57) && keyCode !== 46) { // 46 is dot
+        $event.preventDefault()
+      }
+    },
     modalVisibility () {
       this.showModal = !this.showModal
     },
@@ -93,47 +100,53 @@ export default {
       this.form.file = target.files[0]
     },
     async submit () {
-      let url = ''
-      try {
-        this.sending = true
-        const ref = this.$firebase.database().ref(window.uid)
-        const id = ref.push().key
-        if (this.form.file) {
-          const snapshot = await this.$firebase.storage()
-            .ref(window.uid)
-            .child(this.fileName)
-            .put(this.form.file)
-          url = await snapshot.ref.getDownloadURL()
-        }
-        const payload = {
-          id: id,
-          urlFile: url,
-          ...this.form,
-          createdAt: new Date().getTime()
-        }
-        ref.child(id).set(payload, err => {
-          if (err) {
-            console.log('1')
-            this.$root.$emit('Notification::show', {
-              type: 'danger',
-              message: 'Not possible to insert expense :('
-            })
-          } else {
-            console.log('2')
-            this.$root.$emit('Notification::show', {
-              type: 'success',
-              message: 'Expense storaged!'
-            })
-          }
-        })
-      } catch (err) {
-        console.log('3')
+      if (+this.form.value === 0) {
         this.$root.$emit('Notification::show', {
           type: 'danger',
-          message: 'Not possible to insert expense :('
+          message: 'Not possible to insert expense'
         })
-      } finally {
-        setTimeout(() => { this.sending = false }, 1000)
+      } else {
+        let url = ''
+        try {
+          this.sending = true
+          const ref = this.$firebase.database().ref(window.uid)
+          const id = ref.push().key
+          if (this.form.file) {
+            const snapshot = await this.$firebase.storage()
+              .ref(window.uid)
+              .child(this.fileName)
+              .put(this.form.file)
+            url = await snapshot.ref.getDownloadURL()
+          }
+          const payload = {
+            id: id,
+            urlFile: url,
+            ...this.form,
+            createdAt: new Date().getTime()
+          }
+          ref.child(id).set(payload, err => {
+            if (err) {
+              this.$root.$emit('Notification::show', {
+                type: 'danger',
+                message: 'Not possible to insert expense'
+              })
+            } else {
+              this.$root.$emit('Notification::show', {
+                type: 'success',
+                message: 'Expense storaged!'
+              })
+            }
+          })
+        } catch (err) {
+          this.$root.$emit('Notification::show', {
+            type: 'danger',
+            message: 'Not possible to insert expense'
+          })
+        } finally {
+          setTimeout(() => { this.sending = false }, 1000)
+          this.form.value = ''
+          this.form.description = ''
+        }
       }
     }
   }
@@ -144,16 +157,24 @@ export default {
 
   @import '../../assets/scss/variables';
 
+  .add-btn {
+    background-color: $iconLoading;
+    color: $backgroundLoading;
+    &:hover {
+      background-color: $iconLoading;
+      box-shadow: 0px 0px 10px $iconLoading;
+    }
+  }
   .modal {
     top: 10vh;
-    left: 10vh
+    left: 10vh;
   }
 
   #close-modal {
     color: #fff;
     opacity: 1;
     transition: 0.4s;
-    &:hover{
+    &:hover {
       opacity: 0.5;
     }
   }
@@ -162,26 +183,45 @@ export default {
     background-color: $background;
     color: white;
   }
+
   .modal-body {
     background-color: $backgroundLoading;
     color: white;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+  }
+
+  .upload-btn {
+    margin-bottom: 0px;
   }
 
   #submit-button {
-    padding: 1vh 0 1vh 0;
-    background-color: $backgroundLoading !important;
-    color: $iconLoading !important;
-    margin: 0;
-    padding: 2vh 0 2vh 0;
+    display: flex;
+    justify-content: center;
+    border: 0;
+    padding: 10px;
+    transition: 0.8s;
+    background-color: $iconLoading;
     &:hover {
-      background-color: $iconLoading !important;
-      color: $backgroundLoading !important;
-    }
-    &.active {
-      background-color: $iconLoading !important;
-      color: $backgroundLoading !important;
-      border: 0 !important
-
+      background-color: $iconLoading2;
     }
   }
+
+  .spinner {
+    cursor: none;
+  }
+
+  .trash-btn {
+    background-color: $backgroundLoading;
+    padding: 0;
+    margin: 0 0 0 20px;
+  }
+
+  .file-name {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 0 10px 0;
+  }
+
 </style>
