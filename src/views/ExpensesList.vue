@@ -1,20 +1,146 @@
 <template>
   <div>
-    <h1>
-      Expenses List
-    </h1>
+    <div class='months-navigation'>
+      <div
+        :key='i'
+        @click="setActiveMonth(month)"
+        :class="{active: month.month === activeMonth.month}"
+        v-for="(month, i) in groupedMonths"
+        class="month-link">
+        <div>{{ month.month }}</div>
+        <div class="value-label" v-money-format="month.total"/>
+      </div>
+    </div>
+    <div class="container">
+      <div v-if="!activeMonth.data.length">
+        Not expenses
+      </div>
+      <template v-else>
+        <expense-list-item
+          :key="index"
+          :data="item"
+          v-for="(item, index) in activeMonth.data"
+        />
+      </template>
+    </div>
   </div>
+
 </template>
 
 <script>
-export default {
+import groupBy from 'lodash.groupby'
+import moment from 'moment'
+import ExpenseListItem from './ExpenseListItem'
 
+export default {
+  name: 'ExpensesList',
+  components: {
+    ExpenseListItem
+  },
+  data: () => ({
+    expenses: [],
+    activeMonth: {}
+  }),
+  created () {
+    this.getData()
+  },
+  mounted () {
+    this.setActiveMonth()
+  },
+  computed: {
+    groupedMonths () {
+      let groupedMonths = []
+
+      const addCurrentMonth = () => {
+        groupedMonths.push({
+          data: [],
+          total: 0,
+          month: moment().format('MM/YYYY')
+        })
+      }
+
+      if (this.expenses.length) {
+        const months = groupBy(this.expenses, i => moment(i.createdAt).format('MM/YYYY'))
+
+        const sortedMonths = Object.keys(months).sort((a, b) => {
+          if (moment(`${a} 01`, 'MM/YYYY HH').isBefore(moment(`${b} 01`, 'MM/YYYY HH'))) {
+            return -1
+          } else {
+            return +1
+          }
+        })
+
+        groupedMonths = sortedMonths.map(month => ({
+          month,
+          data: months[month],
+          total: months[month].map(i => +i.value).reduce((a, c) => a + c, 0)
+        }))
+
+        const lastMonth = moment(groupedMonths[groupedMonths.length - 1].month, 'MM/YYYY')
+
+        if (!lastMonth.isSame(moment(), 'month')) {
+
+        }
+      } else {
+        addCurrentMonth()
+      }
+
+      return groupedMonths
+    }
+  },
+  methods: {
+    getData () {
+      const ref = this.$firebase.database().ref(`/${window.uid}`)
+      ref.on('value', snapshot => {
+        const values = snapshot.val()
+        this.expenses = Object.keys(values).map(i => values[i])
+      })
+    },
+    setActiveMonth (month = null) {
+      this.activeMonth = month || this.groupedMonths[this.groupedMonths.length - 1]
+    }
+  }
 }
 </script>
 
 <style lang="scss">
   @import '../assets/scss/variables';
-  .h1 {
-    color: $ligther;
+
+  .months-navigation {
+    display: flex;
+    flex-direction: row;
+    margin: 5px 5px 15px 5px;
+    border: 1px solid $light-medium;
+  .month-link {
+    color: $dark-medium;
+    padding: 15px;
+    cursor: pointer;
+    transition: .4s;
+    border-right: 1px solid $light-medium;
+    text-align: center;
+    &:hover {
+      background-color: $light-medium;
+      color: $backgroundLoading;
+      .value-label {
+        color: $backgroundLoading;
+      }
+    }
+    &.active {
+      background-color: $light-medium;
+      color: $backgroundLoading;
+      .value-label {
+        color: $backgroundLoading;
+      }
+    }
+    .value-label {
+      color: $dark;
+      background-color: rgba(0,0,0,0.2);
+      padding: 0 2px 0 2px;
+      font-size: 8pt;
+      transition: .4s;
+    }
   }
+
+}
+
 </style>
