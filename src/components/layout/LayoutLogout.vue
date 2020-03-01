@@ -47,8 +47,8 @@ export default {
     &:hover {
       color: $dark;
       transition: 0.4s;
-      background-color: $iconLoading;
-      border: 5px solid $iconLoading;
+      background-color: $light-yellow;
+      border: 5px solid $light-yellow;
     }
   }
 </style>

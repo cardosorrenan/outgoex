@@ -27,7 +27,7 @@
     }
   }
   .icon-logo {
-    color: $iconLoading;
+    color: $light-yellow;
     animation-duration: 30s !important;
     animation-iteration-count: infinite;
   }

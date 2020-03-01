@@ -56,7 +56,7 @@ export default {
     transition: 0.4s;
     &:hover {
       color: $dark;
-      background-color: $iconLoading;
+      background-color: $light-yellow;
       .icon-menu {
         transition: 1s;
         color: $dark !important;

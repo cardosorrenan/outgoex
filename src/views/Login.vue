@@ -36,10 +36,16 @@ export default {
   components: {
     Logo
   },
+  mounted () {
+    if (process.env.NODE_ENV === 'development') {
+      this.email = process.env.VUE_APP_LOGIN_EMAIL
+      this.password = process.env.VUE_APP_LOGIN_PASS
+    }
+  },
   data: () => {
     return {
-      email: 'renanhc96@gmail.com',
-      password: 'admin20',
+      email: '',
+      password: '',
       loadingLogin: false
     }
   },
@@ -96,7 +102,7 @@ export default {
     justify-content: center;
   }
   .card {
-    background-color: $backgroundLoading;
+    background-color: $darker-blue;
     width: 25%;
   }
   .form-control {
@@ -124,7 +130,7 @@ export default {
   .fa-search-dollar {
     margin-top: 2.5vh;
     margin-bottom: 2.5vh;
-    color: $iconLoading;
+    color: $light-yellow;
     animation-duration: 1s;
     animation-iteration-count: infinite;
   }

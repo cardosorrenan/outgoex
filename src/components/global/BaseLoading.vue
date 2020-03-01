@@ -33,11 +33,11 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: $backgroundLoading;
+  background-color: $darker-blue;
 }
 
 .fa-search-dollar {
-  color: $iconLoading;
+  color: $light-yellow;
   animation-duration: 1s;
   animation-iteration-count: infinite;
 }

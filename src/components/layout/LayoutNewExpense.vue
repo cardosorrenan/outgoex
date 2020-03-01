@@ -158,11 +158,11 @@ export default {
   @import '../../assets/scss/variables';
 
   .add-btn {
-    background-color: $iconLoading;
-    color: $backgroundLoading;
+    background-color: $light-yellow;
+    color: $darker-blue;
     &:hover {
-      background-color: $iconLoading;
-      box-shadow: 0px 0px 10px $iconLoading;
+      background-color: $light-yellow;
+      box-shadow: 0px 0px 10px $light-yellow;
     }
   }
   .modal {
@@ -180,12 +180,12 @@ export default {
   }
 
   .modal-header {
-    background-color: $background;
+    background-color: $blue;
     color: white;
   }
 
   .modal-body {
-    background-color: $backgroundLoading;
+    background-color: $darker-blue;
     color: white;
     padding-bottom: 0px;
     margin-bottom: 0px;
@@ -201,9 +201,9 @@ export default {
     border: 0;
     padding: 10px;
     transition: 0.8s;
-    background-color: $iconLoading;
+    background-color: $light-yellow;
     &:hover {
-      background-color: $iconLoading2;
+      background-color: $dark-yellow;
     }
   }
 
@@ -212,7 +212,7 @@ export default {
   }
 
   .trash-btn {
-    background-color: $backgroundLoading;
+    background-color: $darker-blue;
     padding: 0;
     margin: 0 0 0 20px;
   }

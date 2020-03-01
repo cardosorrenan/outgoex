@@ -11,9 +11,9 @@
         <div class="value-label" v-money-format="month.total"/>
       </div>
     </div>
-    <div class="container">
-      <div v-if="!activeMonth.data.length">
-        Not expenses
+    <div class="container-expenses">
+      <div v-if="activeMonth.data && !activeMonth.data.length">
+        No expense this month!
       </div>
       <template v-else>
         <expense-list-item
@@ -105,14 +105,20 @@ export default {
 
 <style lang="scss">
   @import '../assets/scss/variables';
-
+  .container-expenses {
+    overflow: hidden auto;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    height: calc(100vh - 117px) !important;
+  }
   .months-navigation {
     display: flex;
     flex-direction: row;
-    margin: 5px 5px 15px 5px;
+    margin: 15px 5px 0px 5px;
     border: 1px solid $light-medium;
   .month-link {
     color: $dark-medium;
+    width: 100px;
     padding: 15px;
     cursor: pointer;
     transition: .4s;
@@ -120,16 +126,16 @@ export default {
     text-align: center;
     &:hover {
       background-color: $light-medium;
-      color: $backgroundLoading;
+      color: $darker-blue;
       .value-label {
-        color: $backgroundLoading;
+        color: $darker-blue;
       }
     }
     &.active {
       background-color: $light-medium;
-      color: $backgroundLoading;
+      color: $darker-blue;
       .value-label {
-        color: $backgroundLoading;
+        color: $darker-blue;
       }
     }
     .value-label {

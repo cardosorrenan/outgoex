@@ -76,7 +76,7 @@ export default {
   .navigation-sidebar {
     padding-left: 0px !important;
     min-height: 100vh;
-    background-color: $backgroundLoading;
+    background-color: $darker-blue;
   }
   .container-fluid {
     z-index: 0;
@@ -87,7 +87,7 @@ export default {
     padding-top: 25px;
     justify-content: center;
     height: 100vh;
-    background-color: $backgroundLoading;
+    background-color: $darker-blue;
     width: 90px;
   }
 </style>

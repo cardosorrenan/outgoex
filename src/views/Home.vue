@@ -37,7 +37,6 @@ export default {
   },
   computed: {
     totals () {
-      // eslint-disable-next-line no-unused-vars
       const exp = this.expenses
       const values = {
         totalSpent: 0,
@@ -77,7 +76,7 @@ export default {
     justify-content: center;
   }
   .home {
-    padding: 15px;
+    padding: 14px;
     display: flex;
     flex-direction: row;
     width: 100%;
